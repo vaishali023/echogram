@@ -12,7 +12,7 @@ export async function createUserAccount(user: INewUser) {
         user.name
         );
         console.log(newAccount);
-        
+
         if(!newAccount) throw Error;
         const avatarUrl = avatars.getInitials(user.name);
         const newUser = await saveUserToDB({
@@ -43,7 +43,7 @@ export async function saveUserToDB(user: {
          appwriteConfig.userCollectionId,
          ID.unique(),
          user,
-      )
+      );
       return newUser;
    }  catch(error) {
       console.log(error);
