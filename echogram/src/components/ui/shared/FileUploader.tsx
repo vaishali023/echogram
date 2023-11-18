@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import { FileWithPath ,useDropzone} from 'react-dropzone'
 import { Button } from '../button';
-import { convertFileToUrl } from "@/lib/utils";
 
 
 type FileUploaderProps = {
@@ -17,7 +16,7 @@ type FileUploaderProps = {
       (acceptedFiles: FileWithPath[]) => {
         setFile(acceptedFiles);
         fieldChange(acceptedFiles);
-        setFileUrl(convertFileToUrl(acceptedFiles[0]));
+        setFileUrl(URL.createObjectURL(acceptedFiles[0]));
       },
       [file]
     );
