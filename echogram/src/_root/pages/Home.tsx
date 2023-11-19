@@ -2,7 +2,6 @@ import PostCard from '@/components/ui/shared/PostCard';
 import { useGetRecentPosts } from '@/lib/react-query/queriesAndMutations';
 import { Models } from 'appwrite';
 import { Loader } from 'lucide-react';
-import React from 'react'
 
 const Home = () => {
   const {data: posts, isPending: isPostLoading, isError: isErrorPosts} = useGetRecentPosts();
@@ -17,8 +16,8 @@ const Home = () => {
           ): (
             <ul className='flex flex-col flex-1 gap-9 w-full'>
                 {posts?.documents.map((post: Models.Document) => (
-                <li className="flex justify-center w-full">
-                   <PostCard post={post} />
+                  <li key={post.$id} className="flex justify-center w-full">
+                   <PostCard post={post} key={post.caption}/>
                 </li>
                 ))}
             </ul>
