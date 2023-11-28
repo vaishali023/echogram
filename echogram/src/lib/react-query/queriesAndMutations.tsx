@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from '@tanstack/react-query'
-import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getRecentPosts, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost } from '../appwrite/api';
+import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getRecentPosts, getUserPosts, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost } from '../appwrite/api';
 import { QUERY_KEYS } from './queryKeys';
 import { INewPost, INewUser, IUpdatePost } from '@/types'
 
@@ -124,6 +124,13 @@ export const useCreateUserAccount = () => {
       enabled: !!postId
     })
   }
+  export const useGetUserPosts = (userId?: string) => {
+    return useQuery({
+      queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
+      queryFn: () => getUserPosts(userId),
+      enabled: !!userId,
+    });
+  };
 
   export const useUpdatePost = () => {
     const queryClient = useQueryClient();
@@ -140,14 +147,16 @@ export const useCreateUserAccount = () => {
   export const useDeletePost = () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: ({postId, imageId}: {postId:string, imageId:string}) => deletePost(postId, imageId),
+      mutationFn: ({ postId, imageId }: { postId?: string; imageId: string }) =>
+        deletePost(postId, imageId),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
-        })
-      }
-    }) 
-  }
+          queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+        });
+      },
+    });
+  };
+  
 
   export const useGetPosts = () => {
     return useInfiniteQuery({
