@@ -4,7 +4,6 @@ import Loader from '@/components/ui/shared/Loader';
 import PostStats from '@/components/ui/shared/PostStats';
 import { useUserContext } from '@/context/AuthContext';
 import { useDeletePost, useGetPostById, useGetUserPosts } from '@/lib/react-query/queriesAndMutations'
-import { formatDate } from '@/lib/utils';
 import { multiFormatDateString } from "@/lib/utils";
 
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -12,12 +11,12 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 const PostDetails = () => {
   const navigate = useNavigate();
     const {id} = useParams()
-    const { data: post, isPending} = useGetPostById(id || '');
    const {user} = useUserContext();
 
+   const { data: post, isPending} = useGetPostById(id || '');
+
    const { data: userPosts, isPending: isUserPostLoading } = useGetUserPosts(
-    post?.creator.$id
-  );
+    post?.creator.$id);
 
    const { mutate: deletePost } = useDeletePost();
 

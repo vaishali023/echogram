@@ -118,10 +118,10 @@ export const useCreateUserAccount = () => {
     });
   };
   
-  export const useGetPostById = (postId: string) => {
+  export const useGetPostById = (postId?: string) => {
     return useQuery({
       queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
-      enabled: !!postId
+      enabled: !!postId,
     })
   }
   export const useGetUserPosts = (userId?: string) => {
@@ -147,8 +147,13 @@ export const useCreateUserAccount = () => {
   export const useDeletePost = () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: ({ postId, imageId }: { postId?: string; imageId: string }) =>
-        deletePost(postId, imageId),
+      mutationFn: ({ postId, imageId }: { postId?: string; imageId: string }) => {
+        // Check if postId is undefined and handle it accordingly
+        if (!postId) {
+          throw new Error("postId is undefined"); // You might want to handle this error case differently
+        }
+        return deletePost(postId, imageId);
+      },
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
@@ -157,12 +162,13 @@ export const useCreateUserAccount = () => {
     });
   };
   
+ 
 
   export const useGetPosts = () => {
     return useInfiniteQuery({
       queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
       queryFn: getInfinitePosts,
-      getPreviousPageParam : (lastPage) => {
+      getNextPageParam : (lastPage) => {
         if(lastPage && lastPage.documents.length === 0) return null;
 
         const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id;
