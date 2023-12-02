@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from '@tanstack/react-query'
-import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getRecentPosts, getUserPosts, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost } from '../appwrite/api';
+import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getUserPosts, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost } from '../appwrite/api';
 import { QUERY_KEYS } from './queryKeys';
 import { INewPost, INewUser, IUpdatePost } from '@/types'
 
@@ -121,6 +121,7 @@ export const useCreateUserAccount = () => {
   export const useGetPostById = (postId?: string) => {
     return useQuery({
       queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+      queryFn: () => getPostById(postId),
       enabled: !!postId,
     })
   }
@@ -167,21 +168,24 @@ export const useCreateUserAccount = () => {
   export const useGetPosts = () => {
     return useInfiniteQuery({
       queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-      queryFn: getInfinitePosts,
-      getNextPageParam : (lastPage) => {
-        if(lastPage && lastPage.documents.length === 0) return null;
-
-        const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id;
-
+      queryFn: getInfinitePosts as any,
+      getNextPageParam: (lastPage: any) => {
+        // If there's no data, there are no more pages.
+        if (lastPage && lastPage.documents.length === 0) {
+          return null;
+        }
+  
+        // Use the $id of the last document as the cursor.
+        const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
         return lastId;
-      }
-    })
-  }
-
+      },
+    });
+  };
+  
   export const useSearchPosts = (searchTerm: string) => {
     return useQuery({
       queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
       queryFn: () => searchPosts(searchTerm),
-      enabled: !!searchTerm
-    })
+      enabled: !!searchTerm,
+    });
   }
