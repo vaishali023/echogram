@@ -181,7 +181,7 @@ export const useCreateUserAccount = () => {
       },
     });
   };
-  
+
   export const useSearchPosts = (searchTerm: string) => {
     return useQuery({
       queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
@@ -189,3 +189,10 @@ export const useCreateUserAccount = () => {
       enabled: !!searchTerm,
     });
   }
+
+  export const useGetSavedPosts = () => {
+    return useQuery({
+      queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      queryFn: getSavedPosts,
+    });
+  };
