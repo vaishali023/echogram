@@ -397,3 +397,17 @@ export async function searchPosts(searchTerm: string) {
     console.log(error);
   }
 }
+
+
+export async function getSavedPosts(userId: string, postId: string) {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+    );  
+    if (!posts) throw Error;
+
+  }  catch(error) {
+    console.log(error);
+  }
+}
