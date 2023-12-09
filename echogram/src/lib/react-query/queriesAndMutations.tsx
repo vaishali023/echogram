@@ -164,7 +164,6 @@ export const useCreateUserAccount = () => {
   };
   
  
-
   export const useGetPosts = () => {
     return useInfiniteQuery({
       queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
@@ -194,5 +193,15 @@ export const useCreateUserAccount = () => {
     return useQuery({
       queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
       queryFn: getSavedPosts,
+    });
+  };
+
+  
+
+  export const useGetUserById = (userId: string) => {
+    return useQuery({
+      queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
+      queryFn: () => getUserById(userId),
+      enabled: !!userId,
     });
   };
