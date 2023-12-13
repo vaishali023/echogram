@@ -426,3 +426,11 @@ export async function getUserById(userId: string ) {
      console.log(error);
   }
 }
+
+export async function updateUser() {
+  try{
+     
+  } catch(error) {
+    console.log(error);
+  }
+}

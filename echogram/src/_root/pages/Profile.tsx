@@ -63,7 +63,7 @@ const Profile = () => {
         <div className="flex justify-center gap-4">
           <div className={`${user.id !== currentUser.$id && "hidden"}`}>
                <Link 
-               to={`/update-profile/$currentUser.$id`}
+               to={`/update-profile/${currentUser.$id}`}
                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${user.id !== currentUser.$id && "hidden"}`}>
                 <img 
                 src={'/assets/icons/edit.svg'}
@@ -73,7 +73,7 @@ const Profile = () => {
                 <p className="flex whitespace-nowrap small-medium">Edit Profile</p>
                </Link>
           </div>
-          <div className={`${user.id === id && id && "hidden"}`}>
+          <div className={`${user.id === id && "hidden"}`}>
             <Button type="button" className="shad-button_primary px-8">Follow</Button>
           </div>
         </div>
@@ -89,7 +89,7 @@ const Profile = () => {
             alt="posts"
             width={20}
             height={20}
-            />
+            /> Posts
           </Link>
           <Link to={`/profile/${id}/liked-posts`}
           className={`profile-tab rounded-r-lg ${
