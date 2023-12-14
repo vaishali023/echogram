@@ -14,10 +14,18 @@ import {
 import { Input } from "@/components/ui/input"
 import { ProfileValidation } from "@/lib/validation";
 
-import { useGetUserById } from "@/lib/react-query/queriesAndMutations"
+import { useGetUserById, useUpdateUser } from "@/lib/react-query/queriesAndMutations"
+import { useParams } from "react-router-dom"
+import { useUserContext } from "@/context/AuthContext"
+import { toast } from "@/components/ui/use-toast"
 
 const UpdateProfile = () => {
+  const {id} = useParams();
+  const {user, setUser } = useUserContext();
   const {data: currentUser} = useGetUserById(id || '');
+
+  const { mutateAsync: updateUser, isPending: isLoadingUpdate } = useUpdateUser();
+
 
   const form = useForm<z.infer<typeof ProfileValidation>>({
     resolver: zodResolver(ProfileValidation),
@@ -29,6 +37,23 @@ const UpdateProfile = () => {
       bio: user.bio || "",
     },
   });
+
+  const handleUpdate = async(value: z.infer<typeof ProfileValidation>) => {
+    const updatedUser = await updateUser({
+      userId: currentUser.$id,
+      name: value.name,
+      bio: value.bio,
+      file: value.file,
+      imageUrl: currentUser.imageUrl,
+      imageId: currentUser.imageId,
+    });
+    if (!updatedUser) {
+      toast({
+        title: `Update user failed. Please try again.`,
+      });
+    }
+
+  }
     
   return (
     <div className="flex flex-1">
@@ -45,7 +70,7 @@ const UpdateProfile = () => {
       </div>
       
       <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-8">
         <FormField
           control={form.control}
           name="username"
