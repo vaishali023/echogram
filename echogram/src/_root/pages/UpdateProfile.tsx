@@ -18,6 +18,9 @@ import { useGetUserById, useUpdateUser } from "@/lib/react-query/queriesAndMutat
 import { useNavigate, useParams } from "react-router-dom"
 import { useUserContext } from "@/context/AuthContext"
 import { toast } from "@/components/ui/use-toast"
+import ProfileUploader from "@/components/ui/shared/ProfileUploader"
+import { Textarea } from "@/components/ui/textarea"
+import { Loader } from "lucide-react"
 
 const UpdateProfile = () => {
   const {id} = useParams();
@@ -79,24 +82,76 @@ const UpdateProfile = () => {
       </div>
       
       <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-8">
+      <form 
+          onSubmit={form.handleSubmit(handleUpdate)} 
+          className="flex flex-col gap-7 w-full mt-4 max-w-5xl">
         <FormField
           control={form.control}
-          name="username"
+          name="file"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
+            <FormItem className="flex">
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <ProfileUploader  fieldChange={field.onChange} mediaUrl={currentUser?.imageUrl} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+       
+       <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shadcn-form_label">Username</FormLabel>
+              <FormControl>
+                <Input type="text" className="shad-input" {...field} disabled />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+       <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shadcn-form_label">Email</FormLabel>
+              <FormControl>
+                <Input type="text" className="shad-input" {...field} disabled/>
+              </FormControl>
+            
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+          <FormField
+          control={form.control}
+          name="bio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="shadcn-form_label">Bio</FormLabel>
+              <FormControl>
+               <Textarea className="shad-textarea custom-scollbar" {...field}/>
+              </FormControl>
+            
+              <FormMessage className="shad-form_message"/>
+            </FormItem>
+          )}
+        />
+        <div className="flex gap-4 items-center justify-end">
+        <Button type="button" className="shad-button_dark_4" 
+        onClick={()=> navigate(-1)}
+        >Cancel</Button>
+        <Button 
+        type="submit" className="shad-button_primary whitespace-nowrap"
+        disabled={isLoadingUpdate}
+        {...isLoadingUpdate && <Loader/>}> Update Profile
+        </Button>
+        </div>
+        
       </form>
     </Form>
 
