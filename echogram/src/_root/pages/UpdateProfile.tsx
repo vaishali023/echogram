@@ -15,13 +15,14 @@ import { Input } from "@/components/ui/input"
 import { ProfileValidation } from "@/lib/validation";
 
 import { useGetUserById, useUpdateUser } from "@/lib/react-query/queriesAndMutations"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useUserContext } from "@/context/AuthContext"
 import { toast } from "@/components/ui/use-toast"
 
 const UpdateProfile = () => {
   const {id} = useParams();
   const {user, setUser } = useUserContext();
+  const navigate = useNavigate();
   const {data: currentUser} = useGetUserById(id || '');
 
   const { mutateAsync: updateUser, isPending: isLoadingUpdate } = useUpdateUser();
@@ -44,8 +45,8 @@ const UpdateProfile = () => {
       name: value.name,
       bio: value.bio,
       file: value.file,
-      imageUrl: currentUser.imageUrl,
-      imageId: currentUser.imageId,
+      imageUrl: currentUser?.imageUrl,
+      imageId: currentUser?.imageId,
     });
     if (!updatedUser) {
       toast({
@@ -53,7 +54,15 @@ const UpdateProfile = () => {
       });
     }
 
-  }
+  
+  setUser({
+    ...user,
+    name: updatedUser?.name,
+    bio: updatedUser?.bio,
+    imageUrl: updatedUser?.imageUrl,
+  });
+  return navigate(`/profile/${id}`);
+};
     
   return (
     <div className="flex flex-1">
