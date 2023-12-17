@@ -401,13 +401,20 @@ export async function searchPosts(searchTerm: string) {
 
 export async function getSavedPosts(userId: string, postId: string) {
   try {
-    const posts = await databases.listDocuments(
+    const updatedPost = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.savesCollectionId,
-    );  
-    if (!posts) throw Error;
+      ID.unique(),
+      {
+        user: userId,
+        post: postId,
+      }
+    );
 
-  }  catch(error) {
+    if (!updatedPost) throw Error;
+
+    return updatedPost;
+  } catch (error) {
     console.log(error);
   }
 }

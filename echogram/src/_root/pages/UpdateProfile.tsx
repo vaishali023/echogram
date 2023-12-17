@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -43,6 +42,11 @@ const UpdateProfile = () => {
   });
 
   const handleUpdate = async(value: z.infer<typeof ProfileValidation>) => {
+    if (!currentUser) {
+      // the scenario where currentUser is undefined or null
+      console.error("Current user not found");
+      return; 
+    }
     const updatedUser = await updateUser({
       userId: currentUser.$id,
       name: value.name,

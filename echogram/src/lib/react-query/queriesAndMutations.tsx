@@ -179,6 +179,8 @@ export const useCreateUserAccount = () => {
         const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
         return lastId;
       },
+      initialPageParam: 0, // Adjust this value based on your initial page parameter requirement
+
     });
   };
 
@@ -191,10 +193,22 @@ export const useCreateUserAccount = () => {
   }
 
   export const useGetSavedPosts = () => {
-    return useQuery({
-      queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-      queryFn: getSavedPosts,
-    });
+    const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ userId, postId }: { userId: string; postId: string }) =>
+      savePost(userId, postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
   };
 
   
@@ -222,3 +236,6 @@ export const useCreateUserAccount = () => {
       }
     })
   }
+
+  //Infinite Query
+  
