@@ -481,3 +481,23 @@ export async function updateUser(user: IUpdateUser) {
     console.log(error);
   }
 }
+
+export async function getInfiniteUsers({pageParam}: any) {
+  const queries = [Query.limit(20)];
+  if(pageParam) {
+    queries.push(Query.cursorAfter(pageParam));
+  }
+
+  try{
+     const users = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      queries,
+     );
+
+     if(!users) throw Error;
+     return users;
+  } catch(error) {
+    console.log(error);
+  }
+}
