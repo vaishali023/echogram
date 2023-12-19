@@ -78,7 +78,7 @@ const PostForm = ({post, action}: PostFormProps) => {
       }
       return (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 max-x-5xl">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-9 w-full max-w-5xl">
             <FormField
               control={form.control}
               name="caption"
