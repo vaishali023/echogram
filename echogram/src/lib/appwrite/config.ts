@@ -11,20 +11,14 @@ export const appwriteConfig = {
 };
 
 
-console.log("appwriteConfig", appwriteConfig); 
-
-
 export const client = new Client();
 
 client.setEndpoint(appwriteConfig.url);
-console.log("appwriteConfig", appwriteConfig.url); 
 
 client.setProject(appwriteConfig.projectId);
-console.log("appwriteConfig", appwriteConfig.projectId); 
 
 
 export const account = new Account(client);
 export const databases = new Databases(client);
 export const storage = new Storage(client);
 export const avatars = new Avatars(client);
-
